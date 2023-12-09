@@ -300,6 +300,7 @@ getCloudConfig <- function(site_id,dir=NULL,uri=NULL,secret=NULL){
 #' @return control
 #' @export
 pda <- function(ipdata=NULL,site_id,control=NULL,dir=NULL,uri=NULL,secret=NULL,hosdata=NULL){
+  message("lonhh: Variance fixed version.")
   config <- getCloudConfig(site_id,dir,uri,secret)
   #add a control if one was provided
   if(!(is.null(control)) &&  config$site_id==control$lead_site) { # control$sites[1]
