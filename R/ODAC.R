@@ -250,9 +250,8 @@ ODAC.estimate <- function(ipdata, control, config) {
   N <- 0
   for (site_i in control$sites) {
     derivatives_i <- pdaGet(paste0(site_i, "_derive"), config)
-    n <- derivatives_i$site_sizeative
-    logL_all_D1 <- logL_all_D1 + n * derivatives_i$logL_D1
-    logL_all_D2 <- logL_all_D2 + n * matrix(unlist(derivatives_i$logL_D2), px, px)
+    logL_all_D1 <- logL_all_D1 + derivatives_i$logL_D1
+    logL_all_D2 <- logL_all_D2 + matrix(unlist(derivatives_i$logL_D2), px, px)
     N <- N + derivatives_i$site_size
   }
 
@@ -273,9 +272,9 @@ ODAC.estimate <- function(ipdata, control, config) {
   }
 
   # surrogate log-L and its gradient
-  logL_diff_D1 <- logL_all_D1 / N - logL_local_D1(bbar)
-  logL_diff_D2 <- logL_all_D2 / N - logL_local_D2(bbar)
-  logL_tilde <- function(b) -(logL_local(b) + sum(b * logL_diff_D1) + 1 / 2 * t(b - bbar) %*% logL_diff_D2 %*% (b - bbar))
+  logL_diff_D1 <- logL_all_D1 / N - logL_local_D1(bbar) / n
+  logL_diff_D2 <- logL_all_D2 / N - logL_local_D2(bbar) / n
+  logL_tilde <- function(b) -(logL_local(b) / n + sum(b * logL_diff_D1) + 1 / 2 * t(b - bbar) %*% logL_diff_D2 %*% (b - bbar))
   # logL_tilde_D1 <- function(b) -(logL_local_D1(b) / n + logL_diff_D1 + logL_diff_D2 %*% (b-bbar))
 
   # optimize the surrogate logL
