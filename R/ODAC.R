@@ -277,6 +277,22 @@ ODAC.estimate <- function(ipdata, control, config) {
   logL_tilde <- function(b) -(logL_local(b) / n + sum(b * logL_diff_D1) + 1 / 2 * t(b - bbar) %*% logL_diff_D2 %*% (b - bbar))
   # logL_tilde_D1 <- function(b) -(logL_local_D1(b) / n + logL_diff_D1 + logL_diff_D2 %*% (b-bbar))
 
+  # message("logL_local of bbar");
+  # print(logL_local(bbar));
+
+  # bb <- c(0.0076121131863,-0.67682218235,1.244644878,0.039126165056,0.00095430668078,0.00029902252402,-0.014876841164)
+  # message("logL_local of b");
+  # print(logL_local(bb));
+
+  # message("logL_diff_D1");
+  # print(logL_diff_D1)
+  
+  # message("logL_diff_D2");
+  # print(logL_diff_D2)
+  
+  # message("bbar");
+  # print(bbar)
+
   # optimize the surrogate logL
   sol <- optim(
     par = bbar,
@@ -287,6 +303,20 @@ ODAC.estimate <- function(ipdata, control, config) {
   )
 
   surr <- list(btilde = sol$par, Htilde = sol$hessian, site = config$site_id, site_size = nrow(ipdata))
+
+  message("parameter after optim");
+  print(sol$par);
+  
+  message("log likelihood of par");
+  print(logL_tilde(sol$par));
+
+  null_b <- rep(0, length(sol$par));
+
+  message("null par");
+  print(null_b);
+
+  message("log likelihood of null par");
+  print(logL_tilde(null_b));
 
   return(surr)
 }
